@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
 
 android {
@@ -44,8 +45,21 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    // kotlin反射库
+    implementation(libs.kotlin.reflect)
+
+    // Retrofit
     implementation(libs.retrofit)
+
+    // Gson转换库
     implementation(libs.converter.gson)
+
+    // Moshi
+    implementation(libs.moshi.kotlin)
+    implementation(libs.converter.moshi)
+    kapt(libs.moshi.kotlin.codegen)
+
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
