@@ -1,9 +1,8 @@
-package com.example.retrofittest
+package com.example.retrofittest.ui
 
-import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import com.example.retrofittest.databinding.ActivityMainBinding
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.retrofittest.model.PlaceResponse
 import com.example.retrofittest.service.PlaceService
 import com.example.retrofittest.service.ServiceCreator
@@ -11,18 +10,18 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-private const val TAG = "MainActivity"
+private const val TAG = "RetrofitTest"
 
-class MainActivity : AppCompatActivity() {
+class MainViewModel : ViewModel() {
 
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val _place = MutableLiveData<String>().apply {
+        value = "北京"
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        binding.getPlaceDataBtn.setOnClickListener {
-            val placeService = ServiceCreator.create<PlaceService>()
-            placeService.searchPlaces("北京").enqueue(object : Callback<PlaceResponse> {
+    fun showPlaceInfo() {
+        val placeService = ServiceCreator.create<PlaceService>()
+        _place.value?.let {
+            placeService.searchPlaces(it).enqueue(object : Callback<PlaceResponse> {
                 override fun onResponse(
                     call: Call<PlaceResponse>,
                     response: Response<PlaceResponse>
@@ -34,7 +33,9 @@ class MainActivity : AppCompatActivity() {
                         for (place in placesList) {
                             Log.d(
                                 TAG,
-                                "place's name: ${place.name}, place's address: ${place.address}, place's location: ${place.location.lat}, ${place.location.lng}"
+                                "place's name: ${place.name}, " +
+                                        "place's address: ${place.address}, " +
+                                        "place's location: ${place.location.lat}, ${place.location.lng}"
                             )
                         }
                     }
